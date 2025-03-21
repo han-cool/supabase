@@ -132,6 +132,11 @@ export const appState = proxy({
     }
   },
 
+  isMfaEnforced: false,
+  setIsMfaEnforced: (value: boolean) => {
+    appState.isMfaEnforced = value
+  },
+
   showEnableBranchingModal: false,
   setShowEnableBranchingModal: (value: boolean) => {
     appState.showEnableBranchingModal = value
