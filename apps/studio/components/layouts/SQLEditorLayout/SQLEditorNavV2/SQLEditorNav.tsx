@@ -561,7 +561,7 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
         <InnerSideMenuCollapsibleContent className="group-data-[state=open]:pt-2">
           {isLoadingSharedSqlSnippets ? (
             <SQLEditorLoadingSnippets />
-          ) : numProjectSnippets === 0 ? (
+          ) : sharedSnippets.length === 0 ? (
             <InnerSideBarEmptyPanel
               className="mx-2"
               title="No shared queries"
@@ -582,12 +582,13 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
                 })
                 const isPreview = isSQLEditorTabsEnabled && tabStore.previewTabId === tabId
                 const isActive = !isPreview && element.metadata?.id === id
+                const isSelected = selectedSnippets.some((x) => x.id === element.metadata?.id)
 
                 return (
                   <SQLEditorTreeViewItem
                     {...props}
                     isOpened={isOpened && !isPreview}
-                    isSelected={isActive}
+                    isSelected={isActive || isSelected}
                     isPreview={isPreview}
                     onDoubleClick={(e) => {
                       e.preventDefault()
@@ -638,7 +639,7 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
         <InnerSideMenuCollapsibleContent className="group-data-[state=open]:pt-2">
           {isLoadingFavoriteSqlSnippets ? (
             <SQLEditorLoadingSnippets />
-          ) : numFavoriteSnippets === 0 ? (
+          ) : favoriteSnippets.length === 0 ? (
             <InnerSideBarEmptyPanel
               title="No favorite queries"
               className="mx-2 px-3"
@@ -665,10 +666,12 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
                 })
                 const isPreview = isSQLEditorTabsEnabled && tabStore.previewTabId === tabId
                 const isActive = !isPreview && element.metadata?.id === id
+                const isSelected = selectedSnippets.some((x) => x.id === element.metadata?.id)
+
                 return (
                   <SQLEditorTreeViewItem
                     {...props}
-                    isSelected={isActive}
+                    isSelected={isActive || isSelected}
                     isOpened={isOpened && !isPreview}
                     isPreview={isPreview}
                     onDoubleClick={(e) => {
@@ -722,7 +725,7 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
         <InnerSideMenuCollapsibleContent className="group-data-[state=open]:pt-2">
           {isLoading ? (
             <EditorMenuListSkeleton />
-          ) : folders.length === 0 && numPrivateSnippets === 0 ? (
+          ) : folders.length === 0 && privateSnippets.length === 0 ? (
             <EmptyPrivateQueriesPanel />
           ) : (
             <TreeView
@@ -753,13 +756,14 @@ export const SQLEditorNav = ({ sort = 'inserted_at' }: SQLEditorNavProps) => {
                 })
                 const isPreview = isSQLEditorTabsEnabled && tabStore.previewTabId === tabId
                 const isActive = !isPreview && element.metadata?.id === id
+                const isSelected = selectedSnippets.some((x) => x.id === element.metadata?.id)
 
                 return (
                   <SQLEditorTreeViewItem
                     {...props}
                     element={element}
                     isOpened={isOpened && !isPreview}
-                    isSelected={isActive}
+                    isSelected={isActive || isSelected}
                     isPreview={isPreview}
                     isMultiSelected={selectedSnippets.length > 1}
                     isLastItem={privateSnippetsLastItemIds.has(element.id as string)}

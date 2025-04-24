@@ -7,7 +7,8 @@ import { createPortal } from 'react-dom'
 import { useParams } from 'common'
 import { useProjectContext } from 'components/layouts/ProjectLayout/ProjectContext'
 import { useTableRowsQuery } from 'data/table-rows/table-rows-query'
-import { useUrlState } from 'hooks/ui/useUrlState'
+import { useTableEditorFiltersSort } from 'hooks/misc/useTableEditorFiltersSort'
+import { RoleImpersonationState } from 'lib/role-impersonation'
 import { EMPTY_ARR } from 'lib/void'
 import { useRoleImpersonationStateSnapshot } from 'state/role-impersonation-state'
 import { useTableEditorStateSnapshot } from 'state/table-editor'
@@ -44,9 +45,8 @@ export const SupabaseGrid = ({
   const gridRef = useRef<DataGridHandle>(null)
   const [mounted, setMounted] = useState(false)
 
-  const [{ sort, filter }, setParams] = useUrlState({
-    arrayKeys: ['sort', 'filter'],
-  })
+  const { filters: filter, sorts: sort, setParams } = useTableEditorFiltersSort()
+
   const sorts = formatSortURLParams(snap.table.name, sort as string[] | undefined)
   const filters = formatFilterURLParams(filter as string[])
 
@@ -88,7 +88,7 @@ export const SupabaseGrid = ({
       filters,
       page: snap.page,
       limit: tableEditorSnap.rowsPerPage,
-      impersonatedRole: roleImpersonationState.role,
+      roleImpersonationState: roleImpersonationState as RoleImpersonationState,
     },
     {
       keepPreviousData: true,
